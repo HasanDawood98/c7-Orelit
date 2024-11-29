@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: backend-refactor
+  name: backend-refactor
+  namespace: c7
+spec:
+  selector:
+    matchLabels:
+      name: backend-refactor
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: backend-refactor
+    spec:
+      hostAliases:
+        - ip: 48.217.98.85
+          hostnames:
+            - api.orelit.com
+      imagePullSecrets:
+      - name: ivolve-docker
+      containers:
+        - image: cloud7ivolve/backend-refactor-orelit:2
+          imagePullPolicy: IfNotPresent
+          name: backend-refactor
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_APPLICATION_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: application-config-backend
+                  key: application-config.json
+          ports:
+            - containerPort: 8088
+              protocol: TCP
+            - containerPort: 8000
+              protocol: TCP

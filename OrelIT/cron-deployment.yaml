@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: cron
+  name: cron
+  namespace: c7
+spec:
+  selector:
+    matchLabels:
+      name: cron
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: cron
+    spec:
+      imagePullSecrets:
+      - name: ivolve-docker
+      hostAliases:
+      - ip: "48.217.98.85"
+        hostnames:
+        - "elk-testing"
+      - ip: "48.217.98.85"
+        hostnames:
+        - "api.orelit.com"
+      containers:
+      - image: cloud7ivolve/cron-billing-taeknizon:3
+        imagePullPolicy: IfNotPresent
+        name: cron
+        env: 
+        - name: SPRING_APPLICATION_JSON
+          valueFrom:
+            configMapKeyRef:
+              name: application-config-cron
+              key: application-config.json
+        ports:
+        - containerPort: 8090
+          protocol: TCP
+        - containerPort: 8002
+          protocol: TCP

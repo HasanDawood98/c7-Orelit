@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: new-ui
+  name: new-ui
+  namespace: c7
+spec:
+  selector:
+    matchLabels:
+      name: new-ui
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: new-ui
+    spec:
+      imagePullSecrets:
+      - name: ivolve-docker
+      containers:
+      - image: cloud7ivolve/new-ui-orelit:7
+        imagePullPolicy: IfNotPresent
+        name: new-ui
+        ports:
+        - containerPort: 3500
+          protocol: TCP
+      hostAliases:
+      - ip: "48.217.98.85"
+        hostnames:
+          - "api.orelit.com"

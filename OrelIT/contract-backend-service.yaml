@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: contract-backend
+  name: contract-backend
+  namespace: c7
+spec:
+  type: NodePort
+  ports:
+  - name: "8082"
+    port: 8082
+    targetPort: 8082
+    nodePort: 30004
+  - name: "8001"
+    port: 8001
+    targetPort: 8001
+    nodePort: 30005
+  selector:
+    name: contract-backend

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: helpdesk
+  name: helpdesk
+  namespace: c7
+spec:
+  ports:
+  - name: "8091"
+    port: 8091
+    targetPort: 8091
+  selector:
+    name: helpdesk

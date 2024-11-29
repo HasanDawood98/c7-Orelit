@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: contract-backend
+  name: contract-backend
+  namespace: c7
+spec:
+  selector:
+    matchLabels:
+      name: contract-backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: contract-backend
+    spec:
+      imagePullSecrets:
+      - name: ivolve-docker
+      containers:
+      - image: cloud7ivolve/contract-backend-taeknizon:3
+        imagePullPolicy: IfNotPresent
+        name: contract-backend
+        env: 
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: SPRING_APPLICATION_JSON
+          valueFrom:
+            configMapKeyRef:
+              name: application-config-contract
+              key: application-config.json
+        ports:
+        - containerPort: 8082
+          protocol: TCP
+        - containerPort: 8001
+          protocol: TCP
+      hostAliases:
+      - ip: "48.217.98.85"
+        hostnames:
+        - api.orelit.com

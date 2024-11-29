@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  REACT_APP_PAYMENT_GATEWAY_PUBLIC_URL: https://api.stripe.com/v1/tokens
+  REACT_APP_PUBLIC_C7_VERSION: version 1.21.0
+  REACT_APP_PUBLIC_ENVIRONMENT: production
+  REACT_APP_PUBLIC_GOOGLE_RECAPCHA_KEY: 6LfWhiQqAAAAAEtYoD0NxsOWuFwHAm3Am-ehYqbo
+  REACT_APP_PUBLIC_MIDDLEWARE: http://cloudconsole.orelit.com
+kind: ConfigMap
+metadata:
+  name: application-config-newui
+  namespace: c7

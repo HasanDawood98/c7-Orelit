@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: new-ui
+  name: new-ui
+  namespace: c7
+spec:
+  ports:
+  - name: "3500"
+    port: 3500
+    targetPort: 3500
+  selector:
+    name: new-ui

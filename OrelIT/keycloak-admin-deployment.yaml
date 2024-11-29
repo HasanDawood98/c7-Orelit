@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: c7
+  labels:
+    app: keycloak
+spec:
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      hostAliases:
+      - ip: 10.2.0.4
+      hostnames:
+      - keycloak.orelit.com
+      containers:
+      - args:
+            - -Dkeycloak.profile.feature.upload_scripts=enabled
+            - -Dkeycloak.profile.feature.token_exchange=enabled
+            - -Dkeycloak.profile=preview
+        name: keycloak
+        image: quay.io/keycloak/keycloak:16.1.1
+        env:
+        - name: KEYCLOAK_USER
+          value: "admin"
+        - name: KEYCLOAK_PASSWORD
+          value: "letmein@123"
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        - name: KEYCLOAK_FRONTEND_URL
+          value: "http://48.217.98.85:31624/auth/"
+        - name: DB_VENDOR
+          value: mariadb
+        - name: DB_ADDR
+          value: 10.2.0.4
+        - name: DB_DATABASE
+          value: keycloak
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          value: noc
+        - name: DB_PASSWORD
+          value: letmein@123
+        - name: JGROUPS_DISCOVERY_PROTOCOL
+          value: dns.DNS_PING
+        - name: JGROUPS_DISCOVERY_PROPERTIES
+          value: "dns_query=keycloak"
+        - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+          value: "true"
+        - name: CACHE_OWNERS_COUNT
+          value: "2"
+        - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+          value: "2"
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /auth/realms/master
+            port: 8080
+          initialDelaySeconds: 120

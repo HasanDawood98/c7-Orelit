@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: c7
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis
+    spec:
+      imagePullSecrets:
+      - name: ivolve-docker
+      containers:
+      - image: redis
+        imagePullPolicy: Always
+        args: ["--requirepass", "$(REDIS_PASS)"]
+        name: redis
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+        env:
+        - name: REDIS_PASS
+          value: Ec<vUBxPBw#}9NX

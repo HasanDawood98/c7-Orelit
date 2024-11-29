@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: helpdesk
+  name: helpdesk
+  namespace: c7
+spec:
+  selector:
+    matchLabels:
+      name: helpdesk
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: helpdesk
+    spec:
+      imagePullSecrets:
+      - name: ivolve-docker
+      containers:
+      - image: cloud7ivolve/helpdesk-taeknizon:2
+        imagePullPolicy: IfNotPresent
+        name: helpdesk
+        env: 
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: SPRING_APPLICATION_JSON
+          valueFrom:
+            configMapKeyRef:
+              name: application-config-helpdesk
+              key: application-config.json
+        ports:
+        - containerPort: 8091
+          protocol: TCP
+      hostAliases:
+      - ip: "48.217.98.85"
+        hostnames:
+        - api.orelit.com

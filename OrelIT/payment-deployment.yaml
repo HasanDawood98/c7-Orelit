@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: payment
+  name: payment
+  namespace: c7
+spec:
+  selector:
+    matchLabels:
+      name: payment
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: payment
+    spec:
+      imagePullSecrets:
+      - name: ivolve-docker
+      containers:
+      - image: cloud7ivolve/payment-gateway-taeknizon:5
+        imagePullPolicy: IfNotPresent
+        name: payment
+        env: 
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: SPRING_APPLICATION_JSON
+          valueFrom:
+            configMapKeyRef:
+              name: application-config-payment
+              key: application-config.json
+        ports:
+        - containerPort: 8084
+          protocol: TCP
+      hostAliases:
+      - ip: "48.217.98.85"
+        hostnames:
+        - api.orelit.com      
