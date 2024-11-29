@@ -22,7 +22,7 @@ spec:
         name: backend-refactor
     spec:
       hostAliases:
-        - ip: 48.217.98.85
+        - ip: 10.82.3.121
           hostnames:
             - api.orelit.com
       imagePullSecrets:
